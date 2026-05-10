@@ -51,6 +51,44 @@ def preprocess_adult_income(df):
 
     df["workclass"] = df["workclass"].apply(simplify_workclass)
 
+    #7. Feature Engineering 추가
+    #is_married
+    married_categories = ["Married-civ-spouse", "Married-AF-spouse"]
+
+    df["is_married"] = (df["marital_status"].isin(married_categories).astype(int))
+
+    #married_male
+    df["married_male"] = ((df["is_married"] == 1) & (df["sex"] == "Male")).astype(int)
+
+    #age * education_num
+    df["age_education"] = (df["age"] * df["education_num"])
+
+    #age^2
+    df["age_squared"] = (df["age"] ** 2)
+
+    #overtime
+    df["overtime"] = (df["hours_per_week"] > 40).astype(int)
+
+    #education_num * hours_per_week
+    df["edu_hours"] = (df["education_num"] * df["hours_per_week"])
+
+    #8. occupation 그룹핑 (다른 열로 추가(묶었을 때 성능이 더 좋을 수도 있기 때문))
+    white_collar = ["Exec-managerial", "Prof-specialty", "Adm-clerical", "Tech-support", "Sales"]
+    blue_collar = ["Craft-repair", "Machine-op-inspct", "Transport-moving", "Handlers-cleaners", "Farming-fishing"]
+    service = ["Other-service", "Priv-house-serv", "Protective-serv"]
+
+    def simplify_occupation(x):
+        if x in white_collar:
+            return "White-collar"
+        elif x in blue_collar:
+            return "Blue-collar"
+        elif x in service:
+            return "Service"
+        else:
+            return "Other"
+
+    df["occupation_group"] = df["occupation"].apply(simplify_occupation)
+
     return df
 
 train_df = preprocess_adult_income(train_df)
