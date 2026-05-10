@@ -1,0 +1,57 @@
+import numpy as np
+import pandas as pd
+
+#CSV 읽어오기
+train_df = pd.read_csv("train.csv")
+
+def preprocess_adult_income(df):
+    df = df.copy()
+
+    #1. 결측치 처리: NaN -> 'Unknown'
+    cat_missing_cols = ["workclass", "occupation", "native_country"]
+
+    for col in cat_missing_cols:
+        df[col] = df[col].replace(np.nan, "Unknown")
+
+    #2. education 제거(education_num과 같기 때문)
+    if "education" in df.columns:
+        df.drop(columns=["education"], inplace=True)
+
+    #3. capital_gain / capital_loss feature engineering(binary flag, log(1+x), net_capital)
+    #binary flag
+    df["has_capital_gain"] = (df["capital_gain"] > 0).astype(int)
+    df["has_capital_loss"] = (df["capital_loss"] > 0).astype(int)
+
+    #log transform
+    df["log_capital_gain"] = np.log1p(df["capital_gain"])
+    df["log_capital_loss"] = np.log1p(df["capital_loss"])
+
+    #net capital
+    df["net_capital"] = (df["capital_gain"] - df["capital_loss"])
+
+    #4. native_country(United-States >> US, 나머지 >> Other)
+    df["native_country"] = np.where(df["native_country"] == "United-States", "US", "Other")
+
+    #5. race(White, 나머지 >> Non-white)
+    df["race"] = np.where(df["race"] == "White", "White", "Non-white")
+
+    #6. workclass 그룹핑
+    gov = ["Federal-gov", "Local-gov", "State-gov"]
+    self_emp = ["Self-emp-inc", "Self-emp-not-inc"]
+
+    def simplify_workclass(x):
+        if x in gov:
+            return "Government"
+        elif x in self_emp:
+            return "Self-employed"
+        elif x == "Private":
+            return "Private"
+        else:
+            return "Not-working"
+
+    df["workclass"] = df["workclass"].apply(simplify_workclass)
+
+    return df
+
+train_df = preprocess_adult_income(train_df)
+train_df.to_csv("train_preprocessed.csv", index=False)
