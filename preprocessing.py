@@ -72,6 +72,18 @@ def preprocess_adult_income(df):
     #education_num * hours_per_week
     df["edu_hours"] = (df["education_num"] * df["hours_per_week"])
 
+    #is_part_time
+    df["is_part_time"] = (df["hours_per_week"] < 35).astype(int)
+
+    #hours_per_week * age
+    df["hours_age"] = (df["hours_per_week"] * df["age"])
+
+    #capital_gain == 99999 top-coding flag
+    df["is_max_gain"] = (df["capital_gain"] == 99999).astype(int)
+
+    #net_capital 3-bin (음수/0/양수)
+    df["net_capital_bin"] = np.sign(df["net_capital"]).astype(int)
+
     #8. occupation 그룹핑 (다른 열로 추가(묶었을 때 성능이 더 좋을 수도 있기 때문))
     white_collar = ["Exec-managerial", "Prof-specialty", "Adm-clerical", "Tech-support", "Sales"]
     blue_collar = ["Craft-repair", "Machine-op-inspct", "Transport-moving", "Handlers-cleaners", "Farming-fishing"]
