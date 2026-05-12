@@ -60,6 +60,9 @@ def preprocess_adult_income(df):
     #married_male
     df["married_male"] = ((df["is_married"] == 1) & (df["sex"] == "Male")).astype(int)
 
+    #is_spouse (relationship == Husband or Wife)
+    df["is_spouse"] = df["relationship"].isin(["Husband", "Wife"]).astype(int)
+
     #age * education_num
     df["age_education"] = (df["age"] * df["education_num"])
 
