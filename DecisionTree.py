@@ -5,6 +5,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
+from preprocessing import preprocess_adult_income
+
 df = pd.read_csv("train_preprocessed.csv")
 
 #target encoding
@@ -61,3 +63,36 @@ importance_df = importance_df.sort_values(by="importance", ascending=False)
 print("=" * 50)
 print("Top 10 Feature Importance")
 print(importance_df.head(10))
+
+#============================================================================================
+
+#test
+test_df = pd.read_csv("test.csv", na_values=['', ' '])
+test_df = preprocess_adult_income(test_df)
+test_df.to_csv("test_preprocessed.csv", index=False)
+
+test_df = pd.read_csv("test_preprocessed.csv");
+
+test_ids = test_df["id"]
+test_df.drop(columns=["id"], inplace=True)
+
+#Label Encoding 적용
+for col in cat_cols:
+    test_df[col] = le_dict[col].transform(test_df[col])
+
+#예측 확률 생성
+y_prob = model.predict_proba(test_df)[:, 1]
+
+#클래스 예측 생성
+y_pred = (y_prob >= 0.5).astype(int)
+
+#npy 저장
+np.save("prob_dt.npy", y_prob)
+
+print("=" * 50)
+print("prob_dt.npy 저장 완료")
+
+prob = np.load("prob_dt.npy")
+print(prob)
+
+print("=" * 50)
