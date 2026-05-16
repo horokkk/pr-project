@@ -3,15 +3,15 @@
 ## 1. max_depth
 ![max_depth](images/max_depth.png)
 
-- max_depth가 너무 작은 경우: 모델이 충분한 패턴을 학습하지 못해 underfitting이 발생
-- max_depth가 너무 큰 경우: 과적합으로 인해 CV 성능이 감소
+- max_depth가 너무 작은 경우: 모델이 충분한 패턴을 학습하지 못해 underfitting이 발생.
+- max_depth가 너무 큰 경우: 과적합으로 인해 CV 성능이 감소.
 
 max_depth=8 부근에서 가장 안정적이고 높은 F1 성능을 기록하여 해당 값을 선택함.
 
 ## 2. min_samples_split
 ![min_samples_split](images/min_samples_split.png)
 
-- min_samples_split이 너무 작은 경우: 작은 샘플 단위까지 과도하게 분기하여 과적합이 발생
+- min_samples_split이 너무 작은 경우: 작은 샘플 단위까지 과도하게 분기하여 과적합이 발생.
 - min_samples_split이 너무 큰 경우: 모델 표현력이 감소함.
 
 min_samples_split=20 부근에서 가장 안정적인 성능을 보여 해당 값을 선택함.
