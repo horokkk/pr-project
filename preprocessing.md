@@ -1,6 +1,6 @@
 # 1. 결측치 처리
 
-![Workclass Missing Ratio](images/WorkclassMissingRatio.png)
+![Workclass Missing Ratio](images/WorkclassMissingRatio.png)<br>
 workclass와 occupation의 결측치는 랜덤하게 발생하지 않았으며, 저소득 집단(≤50K)에서 높은 비율로 나타났다.  
 따라서 결측 행을 제거할 경우 저소득 샘플이 과도하게 삭제될 가능성이 존재한다.  
 
@@ -56,7 +56,7 @@ capital_gain과 capital_loss는 모두 극단적인 right-skew 분포를 보였�
 
 # 4. native_country 이진화
 
-![Native Country Distribution](images/NativeCountryDistribution.png)
+![Native Country Distribution](images/NativeCountryDistribution.png)<br>
 United-States의 비율이 압도적으로 높게 나타났으며, 다수 국가의 샘플 수는 매우 적은 수준이었다.  
 
 희소 카테고리로 인한 차원 증가 및 과적합 가능성을 완화하기 위해 United-States와 Other의 이진 범주로 재구성하였다.
